@@ -1,12 +1,8 @@
 import Image from "next/image";
 
-// TODO: Replace with actual portrait photo once uploaded
-// Expected: 1 portrait photo (full-body, arms open, looking aside, white studio)
-// Will be named and placed at: /images/portrait.jpg (or similar)
 const PORTRAIT_IMAGE = {
-  src: "", // PENDING: actual path once photos are in repo
-  alt: "Jiří Šedivec",
-  pending: true,
+  src: "/images/portrait-rovnovaha.jpg",
+  alt: "Jiří Šedivec, rovnováha ve studiu",
 };
 
 export default function Hero() {
@@ -14,43 +10,19 @@ export default function Hero() {
     <section className="min-h-screen flex items-center bg-white">
       <div className="w-full max-w-7xl mx-auto px-6 py-24 md:py-32">
         <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* LEFT: Large portrait */}
           <div className="relative order-2 md:order-1">
             <div className="aspect-[3/4] relative rounded-2xl overflow-hidden shadow-2xl bg-zinc-100">
-              {PORTRAIT_IMAGE.pending ? (
-                // Placeholder slot for portrait
-                <div className="absolute inset-0 flex items-center justify-center text-zinc-400">
-                  <div className="text-center p-8">
-                    <svg
-                      className="w-16 h-16 mx-auto mb-4 text-zinc-300"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1}
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
-                    <p className="text-sm">Portrét – čeká na nahrání</p>
-                  </div>
-                </div>
-              ) : (
-                <Image
-                  src={PORTRAIT_IMAGE.src}
-                  alt={PORTRAIT_IMAGE.alt}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover object-center"
-                  preload
-                />
-              )}
+              <Image
+                src={PORTRAIT_IMAGE.src}
+                alt={PORTRAIT_IMAGE.alt}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover object-center"
+                priority
+              />
             </div>
           </div>
 
-          {/* RIGHT: Intro + Two paths */}
           <div className="order-1 md:order-2 flex flex-col justify-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-zinc-900 leading-tight mb-6">
               Pohyb v Plzni.
@@ -63,9 +35,7 @@ export default function Hero() {
               sdílet to, čemu věří.
             </p>
 
-            {/* Two clear paths */}
             <div className="grid gap-6">
-              {/* Path 1: Pohyb */}
               <a
                 href="#pohyb"
                 className="group block p-6 bg-zinc-50 rounded-2xl hover:bg-amber-50 transition-all duration-300 border border-zinc-100 hover:border-amber-200"
@@ -95,7 +65,6 @@ export default function Hero() {
                 </div>
               </a>
 
-              {/* Path 2: Weby */}
               <a
                 href="#weby"
                 className="group block p-6 bg-zinc-50 rounded-2xl hover:bg-zinc-100 transition-all duration-300 border border-zinc-100 hover:border-zinc-200"
