@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# original studio dumps (too large for git)
+public/images/Balance_studio_*.jpg
+public/images/_thumbs/
