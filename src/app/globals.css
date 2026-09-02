@@ -4,9 +4,10 @@
   --background: #ffffff;
   --foreground: #1a1a1a;
   --oak: #c9a66b;
-  --oak-light: #e8d5b7;
+  --oak-light: #f5ebe0;
   --oak-dark: #8b6f47;
-  --accent: #2d5a27;
+  --warm-white: #fefdfb;
+  --warm-gray: #f8f7f4;
 }
 
 @theme inline {
@@ -15,7 +16,8 @@
   --color-oak: var(--oak);
   --color-oak-light: var(--oak-light);
   --color-oak-dark: var(--oak-dark);
-  --color-accent: var(--accent);
+  --color-warm-white: var(--warm-white);
+  --color-warm-gray: var(--warm-gray);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -25,7 +27,7 @@ html {
 }
 
 body {
-  background: var(--background);
+  background: var(--warm-white);
   color: var(--foreground);
 }
 
@@ -33,4 +35,32 @@ body {
   html {
     scroll-behavior: auto;
   }
+}
+
+/* Hide scrollbar for horizontal galleries */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Large typography */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;
+}
+
+/* Smooth image loading */
+img {
+  transition: opacity 0.3s ease;
+}
+
+/* Focus styles for accessibility */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--oak);
+  outline-offset: 2px;
+  border-radius: 4px;
 }

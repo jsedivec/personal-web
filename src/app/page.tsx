@@ -1,9 +1,9 @@
-import Image from "next/image";
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
+import PhotoGallery from "@/components/PhotoGallery";
+import KdoJsem from "@/components/KdoJsem";
 import Pohyb from "@/components/Pohyb";
 import Weby from "@/components/Weby";
-import KdoJsem from "@/components/KdoJsem";
 import Kontakt from "@/components/Kontakt";
 import Footer from "@/components/Footer";
 
@@ -13,9 +13,10 @@ export default function Home() {
       <Navigation />
       <main>
         <Hero />
+        <PhotoGallery />
+        <KdoJsem />
         <Pohyb />
         <Weby />
-        <KdoJsem />
         <Kontakt />
       </main>
       <Footer />

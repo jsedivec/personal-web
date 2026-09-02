@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 
 export default function Kontakt() {
   const [formData, setFormData] = useState({
@@ -20,7 +19,7 @@ export default function Kontakt() {
   };
 
   return (
-    <section id="kontakt" className="py-24 md:py-32 bg-white">
+    <section id="kontakt" className="py-24 md:py-32 bg-zinc-50">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid md:grid-cols-2 gap-12 lg:gap-20">
           {/* Contact info */}
@@ -39,7 +38,7 @@ export default function Kontakt() {
                 href="mailto:jiri.sedivec@seznam.cz"
                 className="flex items-center gap-4 group"
               >
-                <div className="w-12 h-12 bg-zinc-100 rounded-full flex items-center justify-center group-hover:bg-zinc-200 transition-colors">
+                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center group-hover:bg-zinc-100 transition-colors shadow-sm">
                   <svg
                     className="w-5 h-5 text-zinc-600"
                     fill="none"
@@ -63,7 +62,7 @@ export default function Kontakt() {
               </a>
 
               <a href="tel:+420728873668" className="flex items-center gap-4 group">
-                <div className="w-12 h-12 bg-zinc-100 rounded-full flex items-center justify-center group-hover:bg-zinc-200 transition-colors">
+                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center group-hover:bg-zinc-100 transition-colors shadow-sm">
                   <svg
                     className="w-5 h-5 text-zinc-600"
                     fill="none"
@@ -92,7 +91,7 @@ export default function Kontakt() {
                 rel="noopener noreferrer"
                 className="flex items-center gap-4 group"
               >
-                <div className="w-12 h-12 bg-zinc-100 rounded-full flex items-center justify-center group-hover:bg-zinc-200 transition-colors">
+                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center group-hover:bg-zinc-100 transition-colors shadow-sm">
                   <svg
                     className="w-5 h-5 text-zinc-600"
                     fill="currentColor"
@@ -112,7 +111,7 @@ export default function Kontakt() {
           </div>
 
           {/* Contact form */}
-          <div>
+          <div className="bg-white rounded-2xl p-8 shadow-sm">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label
@@ -189,28 +188,6 @@ export default function Kontakt() {
                 zprávou.
               </p>
             </form>
-          </div>
-        </div>
-
-        {/* Decorative image */}
-        <div className="mt-20 grid md:grid-cols-2 gap-6">
-          <div className="aspect-[16/9] relative rounded-2xl overflow-hidden">
-            <Image
-              src="/images/floorwork.svg"
-              alt="Pohybová práce na zemi"
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-          </div>
-          <div className="aspect-[16/9] relative rounded-2xl overflow-hidden">
-            <Image
-              src="/images/ball-balance.svg"
-              alt="Balanční práce s míčkem"
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
           </div>
         </div>
       </div>

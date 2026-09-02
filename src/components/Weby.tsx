@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 const projects = [
   {
     title: "pohyb-plzen.cz",
@@ -20,33 +18,33 @@ export default function Weby() {
   return (
     <section id="weby" className="py-24 md:py-32 bg-white">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="max-w-2xl mb-16">
+        <div className="max-w-2xl mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 mb-6">
             Weby
           </h2>
 
-          <p className="text-lg text-zinc-600">
+          <p className="text-lg text-zinc-600 leading-relaxed">
             Tvořím prezentační weby a rezervační systémy pro lidi z pohybového
             světa. Weby, které fungují — bez zbytečností, s jasnou strukturou a
             příjemným pocitem.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-6">
           {projects.map((project) => (
             <a
               key={project.title}
               href={project.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group block bg-zinc-50 rounded-2xl p-8 hover:bg-zinc-100 transition-colors"
+              className="group block bg-zinc-50 rounded-2xl p-8 hover:bg-zinc-100 transition-all duration-300 border border-zinc-100 hover:border-zinc-200"
             >
               <div className="flex items-start justify-between gap-4 mb-4">
                 <h3 className="text-xl font-semibold text-zinc-900 group-hover:text-zinc-600 transition-colors">
                   {project.title}
                 </h3>
                 <svg
-                  className="w-5 h-5 text-zinc-400 group-hover:text-zinc-600 transition-colors flex-shrink-0"
+                  className="w-5 h-5 text-zinc-400 group-hover:text-zinc-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all flex-shrink-0"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -66,7 +64,7 @@ export default function Weby() {
                 {project.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 text-sm bg-white text-zinc-600 rounded-full"
+                    className="px-3 py-1 text-sm bg-white text-zinc-600 rounded-full border border-zinc-200"
                   >
                     {tag}
                   </span>
@@ -76,20 +74,35 @@ export default function Weby() {
           ))}
         </div>
 
-        <div className="mt-12 p-8 bg-zinc-900 rounded-2xl text-center">
-          <h3 className="text-xl font-semibold text-white mb-3">
-            Potřebujete web?
-          </h3>
-          <p className="text-zinc-400 mb-6 max-w-md mx-auto">
-            Pokud hledáte někoho, kdo vám pomůže s webem pro váš pohybový
-            projekt, ozvěte se.
-          </p>
-          <a
-            href="#kontakt"
-            className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-zinc-900 bg-white rounded-full hover:bg-zinc-100 transition-colors"
-          >
-            Napsat
-          </a>
+        <div className="mt-12 p-8 bg-zinc-900 rounded-2xl">
+          <div className="max-w-lg">
+            <h3 className="text-xl font-semibold text-white mb-3">
+              Potřebujete web?
+            </h3>
+            <p className="text-zinc-400 mb-6">
+              Pokud hledáte někoho, kdo vám pomůže s webem pro váš pohybový
+              projekt, ozvěte se.
+            </p>
+            <a
+              href="#kontakt"
+              className="inline-flex items-center px-6 py-3 text-sm font-semibold text-zinc-900 bg-white rounded-full hover:bg-zinc-100 transition-colors"
+            >
+              Napsat mi
+              <svg
+                className="ml-2 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
     </section>
