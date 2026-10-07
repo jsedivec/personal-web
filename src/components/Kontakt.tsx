@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import Reveal from "./Reveal";
 
 const INTEREST_OPTIONS = [
@@ -21,6 +21,7 @@ const PREFILL_MESSAGES: Record<string, string> = {
     "Ahoj, mám zájem o workshop / seminář. Rád/a bych věděl/a více o možnostech.",
   web: "Ahoj, hledám někoho na web na míru. Rád/a bych probral/a detaily.",
 };
+
 type Status = "idle" | "loading" | "success" | "error";
 
 function readZajemFromUrl() {
@@ -32,7 +33,26 @@ function readZajemFromUrl() {
   return new URLSearchParams(hash.split("?")[1]).get("zajem") ?? "";
 }
 
+function subscribeUrl(onChange: () => void) {
+  window.addEventListener("hashchange", onChange);
+  window.addEventListener("popstate", onChange);
+  return () => {
+    window.removeEventListener("hashchange", onChange);
+    window.removeEventListener("popstate", onChange);
+  };
+}
+
+function resolveZajem(raw: string) {
+  if (!raw || !INTEREST_OPTIONS.some((o) => o.value === raw)) return "";
+  return raw;
+}
+
 export default function Kontakt() {
+  const urlZajem = useSyncExternalStore(
+    subscribeUrl,
+    () => resolveZajem(readZajemFromUrl()),
+    () => "",
+  );
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -40,19 +60,17 @@ export default function Kontakt() {
     message: "",
     website: "",
   });
+  const [interestTouched, setInterestTouched] = useState(false);
+  const [messageTouched, setMessageTouched] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
-  useEffect(() => {
-    const zajem = readZajemFromUrl();
-    if (!zajem || !INTEREST_OPTIONS.some((o) => o.value === zajem)) return;
-
-    setFormData((prev) => ({
-      ...prev,
-      interest: zajem,
-      message: prev.message || PREFILL_MESSAGES[zajem] || prev.message,
-    }));
-  }, []);
+  const interest = interestTouched
+    ? formData.interest
+    : formData.interest || urlZajem;
+  const message = messageTouched
+    ? formData.message
+    : formData.message || (urlZajem ? PREFILL_MESSAGES[urlZajem] || "" : "");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,8 +84,8 @@ export default function Kontakt() {
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
-          interest: formData.interest,
-          message: formData.message,
+          interest,
+          message,
           website: formData.website,
         }),
       });
@@ -81,6 +99,8 @@ export default function Kontakt() {
       }
 
       setStatus("success");
+      setInterestTouched(true);
+      setMessageTouched(true);
       setFormData({
         name: "",
         email: "",
@@ -143,7 +163,11 @@ export default function Kontakt() {
               </p>
               <button
                 type="button"
-                onClick={() => setStatus("idle")}
+                onClick={() => {
+                  setInterestTouched(false);
+                  setMessageTouched(false);
+                  setStatus("idle");
+                }}
                 className="pt-2 text-teal underline-offset-4 hover:underline"
               >
                 Poslat další zprávu
@@ -195,15 +219,18 @@ export default function Kontakt() {
                 <select
                   id="interest"
                   name="interest"
-                  value={formData.interest}
+                  value={interest}
                   onChange={(e) => {
-                    const interest = e.target.value;
+                    const nextInterest = e.target.value;
+                    setInterestTouched(true);
                     setFormData((prev) => ({
                       ...prev,
-                      interest,
+                      interest: nextInterest,
                       message:
-                        !prev.message && PREFILL_MESSAGES[interest]
-                          ? PREFILL_MESSAGES[interest]
+                        !messageTouched &&
+                        !prev.message &&
+                        PREFILL_MESSAGES[nextInterest]
+                          ? PREFILL_MESSAGES[nextInterest]
                           : prev.message,
                     }));
                   }}
@@ -229,10 +256,11 @@ export default function Kontakt() {
                   name="message"
                   rows={5}
                   required
-                  value={formData.message}
-                  onChange={(e) =>
-                    setFormData({ ...formData, message: e.target.value })
-                  }
+                  value={message}
+                  onChange={(e) => {
+                    setMessageTouched(true);
+                    setFormData({ ...formData, message: e.target.value });
+                  }}
                   className="w-full resize-none border-b border-foreground/20 bg-transparent py-3 transition-colors outline-none focus:border-teal"
                   placeholder="Vaše zpráva..."
                 />

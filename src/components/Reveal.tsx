@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 
 type RevealProps = {
   children: ReactNode;
@@ -8,6 +15,16 @@ type RevealProps = {
   delay?: number;
   variant?: "up" | "photo";
 };
+
+function subscribeReducedMotion(onChange: () => void) {
+  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+
+function getReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
 
 export default function Reveal({
   children,
@@ -17,16 +34,17 @@ export default function Reveal({
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
+  const reducedMotion = useSyncExternalStore(
+    subscribeReducedMotion,
+    getReducedMotion,
+    () => false,
+  );
 
   useEffect(() => {
+    if (reducedMotion) return;
+
     const el = ref.current;
     if (!el) return;
-
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
-      setShown(true);
-      return;
-    }
 
     const io = new IntersectionObserver(
       ([entry]) => {
@@ -41,16 +59,18 @@ export default function Reveal({
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [reducedMotion, variant]);
 
   const style: CSSProperties | undefined = delay
     ? { transitionDelay: `${delay}ms` }
     : undefined;
 
+  const isIn = reducedMotion || shown;
+
   return (
     <div
       ref={ref}
-      className={`${variant === "photo" ? "reveal-photo" : "reveal"} ${shown ? "is-in" : ""} ${className}`}
+      className={`${variant === "photo" ? "reveal-photo" : "reveal"} ${isIn ? "is-in" : ""} ${className}`}
       style={style}
     >
       {children}

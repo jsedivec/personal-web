@@ -1,0 +1,16 @@
+# Large studio dumps and unused source photos — keep deploys small
+public/images/Balance_studio_*.jpg
+public/images/_thumbs/
+public/images/25_*.JPG
+public/images/25_*.jpg
+public/images/IMG_*
+public/images/64003*
+public/images/gym-crawl.jpg
+public/images/gym-hul-loket.jpg
+public/images/gym-korekce.jpg
+public/images/gym-portrait.jpg
+public/images/gym-squat.jpg
+public/images/gym-vedeni.jpg
+public/images/studio-skupina.png
+public/images/workshop-skupina.jpg
+.env*.local

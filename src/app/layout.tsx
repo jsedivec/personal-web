@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Figtree, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
@@ -53,7 +54,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="cs" className={`${figtree.variable} ${spaceGrotesk.variable} antialiased`}>
-      <body className="min-h-screen bg-paper font-sans text-foreground">{children}</body>
+      <body className="min-h-screen bg-paper font-sans text-foreground">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
