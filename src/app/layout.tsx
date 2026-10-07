@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Figtree, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-geist-sans",
+const figtree = Figtree({
+  variable: "--font-figtree",
   subsets: ["latin", "latin-ext"],
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space",
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Jiří Šedivec | Pohyb v Plzni & Weby",
+  title: "Jirka Šedivec | Pohyblivý ajťák",
   description:
     "Jsem Jirka Šedivec — učím pohyb v Plzni a tvořím weby. Skupinové lekce, individuály a prezentační weby na míru.",
   keywords: [
@@ -16,24 +23,24 @@ export const metadata: Metadata = {
     "Plzeň",
     "movement",
     "lekce pohybu",
-    "Jiří Šedivec",
+    "Jirka Šedivec",
     "weby",
     "tvorba webů",
   ],
-  authors: [{ name: "Jiří Šedivec" }],
-  creator: "Jiří Šedivec",
+  authors: [{ name: "Jirka Šedivec" }],
+  creator: "Jirka Šedivec",
   openGraph: {
     type: "website",
     locale: "cs_CZ",
     url: "https://jirisedivec.cz",
-    title: "Jiří Šedivec | Pohyb v Plzni & Weby",
+    title: "Jirka Šedivec | Pohyblivý ajťák",
     description:
       "Jsem Jirka Šedivec — učím pohyb v Plzni a tvořím weby. Skupinové lekce, individuály a prezentační weby na míru.",
-    siteName: "Jiří Šedivec",
+    siteName: "Jirka Šedivec",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jiří Šedivec | Pohyb v Plzni & Weby",
+    title: "Jirka Šedivec | Pohyblivý ajťák",
     description:
       "Jsem Jirka Šedivec — učím pohyb v Plzni a tvořím weby. Skupinové lekce, individuály a prezentační weby na míru.",
   },
@@ -45,8 +52,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="cs" className={`${inter.variable} antialiased`}>
-      <body className="min-h-screen bg-white text-zinc-900">{children}</body>
+    <html lang="cs" className={`${figtree.variable} ${spaceGrotesk.variable} antialiased`}>
+      <body className="min-h-screen bg-paper font-sans text-foreground">{children}</body>
     </html>
   );
 }

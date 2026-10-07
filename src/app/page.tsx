@@ -1,7 +1,8 @@
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
-import PhotoGallery from "@/components/PhotoGallery";
 import KdoJsem from "@/components/KdoJsem";
+import PhotoGallery from "@/components/PhotoGallery";
+import Sluzby from "@/components/Sluzby";
 import Pohyb from "@/components/Pohyb";
 import Weby from "@/components/Weby";
 import Kontakt from "@/components/Kontakt";
@@ -13,8 +14,9 @@ export default function Home() {
       <Navigation />
       <main>
         <Hero />
-        <PhotoGallery />
         <KdoJsem />
+        <PhotoGallery />
+        <Sluzby />
         <Pohyb />
         <Weby />
         <Kontakt />

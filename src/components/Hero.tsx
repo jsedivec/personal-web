@@ -1,100 +1,54 @@
 import Image from "next/image";
 
-const PORTRAIT_IMAGE = {
-  src: "/images/portrait-rovnovaha.jpg",
-  alt: "Jiří Šedivec, rovnováha ve studiu",
-};
-
 export default function Hero() {
   return (
-    <section className="min-h-screen flex items-center bg-white">
-      <div className="w-full max-w-7xl mx-auto px-6 py-24 md:py-32">
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
-          <div className="relative order-2 md:order-1">
-            <div className="aspect-[3/4] relative rounded-2xl overflow-hidden shadow-2xl bg-zinc-100">
-              <Image
-                src={PORTRAIT_IMAGE.src}
-                alt={PORTRAIT_IMAGE.alt}
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover object-center"
-                priority
-              />
-            </div>
-          </div>
+    <section className="relative overflow-hidden lg:min-h-[100svh]">
+      <div className="grid lg:min-h-[100svh] lg:grid-cols-2">
+        <div className="relative flex flex-col justify-center px-5 pt-24 pb-8 sm:px-8 lg:px-12 lg:py-28 xl:px-20">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_0%_50%,rgba(31,111,106,0.1),transparent_55%)]"
+          />
 
-          <div className="order-1 md:order-2 flex flex-col justify-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-zinc-900 leading-tight mb-6">
-              Pohyb v Plzni.
-              <br />
-              <span className="text-zinc-500">A weby, které k tomu patří.</span>
-            </h1>
-
-            <p className="text-lg md:text-xl text-zinc-600 mb-12 max-w-lg">
-              Jsem Jirka Šedivec. Učím pohyb a tvořím weby pro ty, kteří chtějí
-              sdílet to, čemu věří.
+          <div className="relative max-w-lg">
+            <p className="rise text-sm leading-snug text-teal sm:text-base">
+              učím lidi se lépe hýbat a tvořím weby
             </p>
 
-            <div className="grid gap-6">
-              <a
-                href="#pohyb"
-                className="group block p-6 bg-zinc-50 rounded-2xl hover:bg-amber-50 transition-all duration-300 border border-zinc-100 hover:border-amber-200"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-xl font-semibold text-zinc-900 mb-2 group-hover:text-amber-900 transition-colors">
-                      Pohyb
-                    </h2>
-                    <p className="text-zinc-600 group-hover:text-amber-800 transition-colors">
-                      Skupinové lekce a individuální tréninky v Plzni.
-                    </p>
-                  </div>
-                  <svg
-                    className="w-6 h-6 text-zinc-400 group-hover:text-amber-600 group-hover:translate-x-1 transition-all flex-shrink-0 ml-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
-                </div>
-              </a>
+            <h1 className="rise rise-d1 mt-3 font-display text-4xl leading-[0.95] font-medium tracking-tight text-foreground sm:text-5xl lg:mt-4 lg:text-7xl">
+              Jirka Šedivec
+            </h1>
 
-              <a
-                href="#weby"
-                className="group block p-6 bg-zinc-50 rounded-2xl hover:bg-zinc-100 transition-all duration-300 border border-zinc-100 hover:border-zinc-200"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-xl font-semibold text-zinc-900 mb-2 transition-colors">
-                      Weby
-                    </h2>
-                    <p className="text-zinc-600 transition-colors">
-                      Prezentační weby pro lidi z pohybového světa.
-                    </p>
-                  </div>
-                  <svg
-                    className="w-6 h-6 text-zinc-400 group-hover:text-zinc-600 group-hover:translate-x-1 transition-all flex-shrink-0 ml-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
-                </div>
+            <p className="rise rise-d2 mt-6 max-w-sm text-base text-foreground/65">
+              Plzeň · pohybové lekce · weby na míru
+            </p>
+
+            <div className="rise rise-d3 mt-8 flex flex-wrap gap-x-8 gap-y-3 text-lg">
+              <a href="#sluzby" className="group inline-flex items-center gap-2">
+                Služby
+                <span className="transition-transform duration-300 group-hover:translate-x-1">
+                  →
+                </span>
+              </a>
+              <a href="#kontakt" className="group inline-flex items-center gap-2 text-foreground/65">
+                Napiš mi
+                <span className="transition-transform duration-300 group-hover:translate-x-1">
+                  →
+                </span>
               </a>
             </div>
           </div>
+        </div>
+
+        <div className="hero-photo relative aspect-[5/4] min-h-[38vh] lg:aspect-auto lg:min-h-full">
+          <Image
+            src="/images/gym-drep.jpg"
+            alt="Jirka Šedivec při pohybové lekci"
+            fill
+            sizes="(max-width: 1024px) 100vw, 70vw"
+            className="object-cover object-[40%_30%]"
+            priority
+          />
         </div>
       </div>
     </section>

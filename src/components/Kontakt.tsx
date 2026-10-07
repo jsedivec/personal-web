@@ -1,123 +1,158 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Reveal from "./Reveal";
+
+const INTEREST_OPTIONS = [
+  { value: "", label: "Vyberte…" },
+  { value: "individual", label: "Individuální lekce" },
+  { value: "skupina", label: "Skupinové lekce" },
+  { value: "workshop", label: "Workshop / seminář" },
+  { value: "web", label: "Web na míru" },
+  { value: "jine", label: "Jiné / obecný dotaz" },
+] as const;
+
+const PREFILL_MESSAGES: Record<string, string> = {
+  individual:
+    "Ahoj, mám zájem o individuální lekci v Plzni. Dej mi prosím vědět, jaké máš volné termíny.",
+  skupina:
+    "Ahoj, zajímají mě skupinové lekce ve studiu. Můžeš mi napsat víc?",
+  workshop:
+    "Ahoj, mám zájem o workshop / seminář. Rád/a bych věděl/a více o možnostech.",
+  web: "Ahoj, hledám někoho na web na míru. Rád/a bych probral/a detaily.",
+};
+type Status = "idle" | "loading" | "success" | "error";
+
+function readZajemFromUrl() {
+  if (typeof window === "undefined") return "";
+  const search = new URLSearchParams(window.location.search).get("zajem");
+  if (search) return search;
+  const hash = window.location.hash;
+  if (!hash.includes("?")) return "";
+  return new URLSearchParams(hash.split("?")[1]).get("zajem") ?? "";
+}
 
 export default function Kontakt() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    interest: "",
     message: "",
+    website: "",
   });
+  const [status, setStatus] = useState<Status>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const zajem = readZajemFromUrl();
+    if (!zajem || !INTEREST_OPTIONS.some((o) => o.value === zajem)) return;
+
+    setFormData((prev) => ({
+      ...prev,
+      interest: zajem,
+      message: prev.message || PREFILL_MESSAGES[zajem] || prev.message,
+    }));
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent(`Zpráva od ${formData.name}`);
-    const body = encodeURIComponent(
-      `Jméno: ${formData.name}\nE-mail: ${formData.email}\n\n${formData.message}`
-    );
-    window.location.href = `mailto:jiri.sedivec@seznam.cz?subject=${subject}&body=${body}`;
+    setStatus("loading");
+    setErrorMessage("");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          interest: formData.interest,
+          message: formData.message,
+          website: formData.website,
+        }),
+      });
+
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+
+      if (!res.ok) {
+        setStatus("error");
+        setErrorMessage(data.error ?? "Odeslání se nepovedlo.");
+        return;
+      }
+
+      setStatus("success");
+      setFormData({
+        name: "",
+        email: "",
+        interest: "",
+        message: "",
+        website: "",
+      });
+    } catch {
+      setStatus("error");
+      setErrorMessage("Odeslání se nepovedlo. Zkontrolujte připojení.");
+    }
   };
 
   return (
-    <section id="kontakt" className="py-24 md:py-32 bg-zinc-50">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-20">
-          {/* Contact info */}
-          <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 mb-6">
+    <section id="kontakt" className="py-16 sm:py-24 lg:py-36">
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-6 lg:grid-cols-2 lg:gap-24">
+        <div>
+          <Reveal>
+            <h2 className="font-display text-3xl text-foreground sm:text-4xl lg:text-5xl">
               Kontakt
             </h2>
-
-            <p className="text-lg text-zinc-600 mb-10">
+            <p className="mt-4 text-base text-foreground/70 sm:mt-6 sm:text-lg">
               Chcete se domluvit na individuální lekci, máte zájem o web, nebo
               se jen chcete na něco zeptat? Napište mi.
             </p>
+          </Reveal>
 
-            <div className="space-y-6">
-              <a
-                href="mailto:jiri.sedivec@seznam.cz"
-                className="flex items-center gap-4 group"
-              >
-                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center group-hover:bg-zinc-100 transition-colors shadow-sm">
-                  <svg
-                    className="w-5 h-5 text-zinc-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm text-zinc-500">E-mail</p>
-                  <p className="text-zinc-900 font-medium group-hover:text-zinc-600 transition-colors">
-                    jiri.sedivec@seznam.cz
-                  </p>
-                </div>
+          <div className="mt-12 space-y-8">
+            <Reveal delay={80}>
+              <a href="mailto:jiri.sedivec@seznam.cz" className="group block">
+                <p className="text-sm tracking-[0.2em] text-teal uppercase">E-mail</p>
+                <p className="mt-1 font-display text-2xl text-foreground group-hover:text-teal">
+                  jiri.sedivec@seznam.cz
+                </p>
               </a>
+            </Reveal>
 
-              <a href="tel:+420728873668" className="flex items-center gap-4 group">
-                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center group-hover:bg-zinc-100 transition-colors shadow-sm">
-                  <svg
-                    className="w-5 h-5 text-zinc-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm text-zinc-500">Telefon</p>
-                  <p className="text-zinc-900 font-medium group-hover:text-zinc-600 transition-colors">
-                    +420 728 873 668
-                  </p>
-                </div>
-              </a>
-
+            <Reveal delay={140}>
               <a
                 href="https://www.instagram.com/jirka_sedivec"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-4 group"
+                className="group block"
               >
-                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center group-hover:bg-zinc-100 transition-colors shadow-sm">
-                  <svg
-                    className="w-5 h-5 text-zinc-600"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm text-zinc-500">Instagram</p>
-                  <p className="text-zinc-900 font-medium group-hover:text-zinc-600 transition-colors">
-                    @jirka_sedivec
-                  </p>
-                </div>
+                <p className="text-sm tracking-[0.2em] text-teal uppercase">Instagram</p>
+                <p className="mt-1 font-display text-2xl text-foreground group-hover:text-teal">
+                  @jirka_sedivec
+                </p>
               </a>
-            </div>
+            </Reveal>
           </div>
+        </div>
 
-          {/* Contact form */}
-          <div className="bg-white rounded-2xl p-8 shadow-sm">
-            <form onSubmit={handleSubmit} className="space-y-6">
+        <Reveal delay={120}>
+          {status === "success" ? (
+            <div className="space-y-4 py-8">
+              <p className="font-display text-2xl text-foreground">Díky za zprávu.</p>
+              <p className="text-foreground/70">
+                Ozvu se co nejdřív na e-mail, který jste uvedli.
+              </p>
+              <button
+                type="button"
+                onClick={() => setStatus("idle")}
+                className="pt-2 text-teal underline-offset-4 hover:underline"
+              >
+                Poslat další zprávu
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="relative space-y-6">
               <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-zinc-700 mb-2"
-                >
+                <label htmlFor="name" className="mb-2 block text-sm text-foreground/60">
                   Jméno
                 </label>
                 <input
@@ -125,20 +160,16 @@ export default function Kontakt() {
                   id="name"
                   name="name"
                   required
+                  autoComplete="name"
                   value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all"
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full border-b border-foreground/20 bg-transparent py-3 transition-colors outline-none focus:border-teal"
                   placeholder="Vaše jméno"
                 />
               </div>
 
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-zinc-700 mb-2"
-                >
+                <label htmlFor="email" className="mb-2 block text-sm text-foreground/60">
                   E-mail
                 </label>
                 <input
@@ -146,19 +177,50 @@ export default function Kontakt() {
                   id="email"
                   name="email"
                   required
+                  autoComplete="email"
                   value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all"
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full border-b border-foreground/20 bg-transparent py-3 transition-colors outline-none focus:border-teal"
                   placeholder="vas@email.cz"
                 />
               </div>
 
               <div>
                 <label
+                  htmlFor="interest"
+                  className="mb-2 block text-sm text-foreground/60"
+                >
+                  Zájem
+                </label>
+                <select
+                  id="interest"
+                  name="interest"
+                  value={formData.interest}
+                  onChange={(e) => {
+                    const interest = e.target.value;
+                    setFormData((prev) => ({
+                      ...prev,
+                      interest,
+                      message:
+                        !prev.message && PREFILL_MESSAGES[interest]
+                          ? PREFILL_MESSAGES[interest]
+                          : prev.message,
+                    }));
+                  }}
+                  className="w-full border-b border-foreground/20 bg-transparent py-3 transition-colors outline-none focus:border-teal"
+                >
+                  {INTEREST_OPTIONS.map((option) => (
+                    <option key={option.value || "empty"} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label
                   htmlFor="message"
-                  className="block text-sm font-medium text-zinc-700 mb-2"
+                  className="mb-2 block text-sm text-foreground/60"
                 >
                   Zpráva
                 </label>
@@ -171,25 +233,50 @@ export default function Kontakt() {
                   onChange={(e) =>
                     setFormData({ ...formData, message: e.target.value })
                   }
-                  className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all resize-none"
+                  className="w-full resize-none border-b border-foreground/20 bg-transparent py-3 transition-colors outline-none focus:border-teal"
                   placeholder="Vaše zpráva..."
+                />
+              </div>
+
+              {/* Honeypot — hidden from users */}
+              <div className="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden>
+                <label htmlFor="website">Website</label>
+                <input
+                  type="text"
+                  id="website"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={formData.website}
+                  onChange={(e) =>
+                    setFormData({ ...formData, website: e.target.value })
+                  }
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full px-8 py-4 text-base font-semibold text-white bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-colors"
+                disabled={status === "loading"}
+                className="group inline-flex items-center gap-2 pt-4 text-lg text-foreground disabled:opacity-50"
               >
-                Odeslat zprávu
+                {status === "loading" ? "Odesílám…" : "Odeslat zprávu"}
+                <span className="transition-transform duration-300 group-hover:translate-x-1">
+                  →
+                </span>
               </button>
 
-              <p className="text-sm text-zinc-500 text-center">
-                Po odeslání se otevře váš e-mailový klient s předvyplněnou
-                zprávou.
+              {status === "error" && (
+                <p className="text-sm text-red-700" role="alert">
+                  {errorMessage}
+                </p>
+              )}
+
+              <p className="text-sm text-foreground/45">
+                Zpráva přijde přímo na můj e-mail. Odpovím co nejdřív.
               </p>
             </form>
-          </div>
-        </div>
+          )}
+        </Reveal>
       </div>
     </section>
   );
