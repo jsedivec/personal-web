@@ -5,6 +5,7 @@ const INTEREST_LABELS: Record<string, string> = {
   individual: "Individuální lekce",
   skupina: "Skupinové lekce",
   workshop: "Workshop / seminář",
+  firma: "Firemní workshop",
   web: "Web na míru",
   jine: "Jiné / obecný dotaz",
 };

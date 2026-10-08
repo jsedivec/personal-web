@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import KdoJsem from "@/components/KdoJsem";
@@ -19,7 +20,9 @@ export default function Home() {
         <Sluzby />
         <Pohyb />
         <Weby />
-        <Kontakt />
+        <Suspense fallback={null}>
+          <Kontakt />
+        </Suspense>
       </main>
       <Footer />
     </>

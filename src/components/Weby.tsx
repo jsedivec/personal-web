@@ -74,7 +74,7 @@ export default function Weby() {
               projekt, ozvěte se.
             </p>
             <a
-              href="#kontakt?zajem=web"
+              href="?zajem=web#kontakt"
               className="group mt-6 inline-flex items-center gap-2 text-lg"
             >
               Napiš mi

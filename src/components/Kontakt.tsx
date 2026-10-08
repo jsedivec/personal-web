@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Reveal from "./Reveal";
 
 const INTEREST_OPTIONS = [
@@ -8,6 +9,7 @@ const INTEREST_OPTIONS = [
   { value: "individual", label: "Individuální lekce" },
   { value: "skupina", label: "Skupinové lekce" },
   { value: "workshop", label: "Workshop / seminář" },
+  { value: "firma", label: "Firemní workshop" },
   { value: "web", label: "Web na míru" },
   { value: "jine", label: "Jiné / obecný dotaz" },
 ] as const;
@@ -19,40 +21,21 @@ const PREFILL_MESSAGES: Record<string, string> = {
     "Ahoj, zajímají mě skupinové lekce ve studiu. Můžeš mi napsat víc?",
   workshop:
     "Ahoj, mám zájem o workshop / seminář. Rád/a bych věděl/a více o možnostech.",
+  firma:
+    "Ahoj, zajímá nás firemní pohybový workshop. Rádi bychom probrali formát a termín.",
   web: "Ahoj, hledám někoho na web na míru. Rád/a bych probral/a detaily.",
 };
 
 type Status = "idle" | "loading" | "success" | "error";
 
-function readZajemFromUrl() {
-  if (typeof window === "undefined") return "";
-  const search = new URLSearchParams(window.location.search).get("zajem");
-  if (search) return search;
-  const hash = window.location.hash;
-  if (!hash.includes("?")) return "";
-  return new URLSearchParams(hash.split("?")[1]).get("zajem") ?? "";
-}
-
-function subscribeUrl(onChange: () => void) {
-  window.addEventListener("hashchange", onChange);
-  window.addEventListener("popstate", onChange);
-  return () => {
-    window.removeEventListener("hashchange", onChange);
-    window.removeEventListener("popstate", onChange);
-  };
-}
-
-function resolveZajem(raw: string) {
+function resolveZajem(raw: string | null) {
   if (!raw || !INTEREST_OPTIONS.some((o) => o.value === raw)) return "";
   return raw;
 }
 
 export default function Kontakt() {
-  const urlZajem = useSyncExternalStore(
-    subscribeUrl,
-    () => resolveZajem(readZajemFromUrl()),
-    () => "",
-  );
+  const searchParams = useSearchParams();
+  const urlZajem = resolveZajem(searchParams.get("zajem"));
   const [formData, setFormData] = useState({
     name: "",
     email: "",
