@@ -205,16 +205,23 @@ export default function Kontakt() {
                   value={interest}
                   onChange={(e) => {
                     const nextInterest = e.target.value;
+                    const currentMessage = message;
+                    const isTemplate =
+                      !currentMessage ||
+                      Object.values(PREFILL_MESSAGES).includes(currentMessage);
+                    const nextMessage =
+                      isTemplate && PREFILL_MESSAGES[nextInterest]
+                        ? PREFILL_MESSAGES[nextInterest]
+                        : isTemplate && !nextInterest
+                          ? ""
+                          : currentMessage;
+
                     setInterestTouched(true);
+                    if (isTemplate) setMessageTouched(false);
                     setFormData((prev) => ({
                       ...prev,
                       interest: nextInterest,
-                      message:
-                        !messageTouched &&
-                        !prev.message &&
-                        PREFILL_MESSAGES[nextInterest]
-                          ? PREFILL_MESSAGES[nextInterest]
-                          : prev.message,
+                      message: nextMessage,
                     }));
                   }}
                   className="w-full border-b border-foreground/20 bg-transparent py-3 transition-colors outline-none focus:border-teal"

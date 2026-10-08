@@ -16,7 +16,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Jirka Šedivec | Pohyblivý ajťák",
+  title: "JŠ",
   description:
     "Jsem Jirka Šedivec — učím pohyb v Plzni a tvořím weby. Skupinové lekce, individuály a prezentační weby na míru.",
   keywords: [
@@ -34,14 +34,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "cs_CZ",
     url: "https://jirisedivec.cz",
-    title: "Jirka Šedivec | Pohyblivý ajťák",
+    title: "Jirka Šedivec",
     description:
       "Jsem Jirka Šedivec — učím pohyb v Plzni a tvořím weby. Skupinové lekce, individuály a prezentační weby na míru.",
     siteName: "Jirka Šedivec",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jirka Šedivec | Pohyblivý ajťák",
+    title: "Jirka Šedivec",
     description:
       "Jsem Jirka Šedivec — učím pohyb v Plzni a tvořím weby. Skupinové lekce, individuály a prezentační weby na míru.",
   },

@@ -5,12 +5,10 @@ import Image from "next/image";
 import Reveal from "./Reveal";
 
 const GALLERY_PHOTOS: Array<{ src: string; alt: string }> = [
-  { src: "/images/lekce-vede-skupinu.jpg", alt: "Vedení skupiny ve studiu" },
   { src: "/images/lekce-korekce.jpg", alt: "Korekce postoje na lekci" },
   { src: "/images/lekce-micek-rovnovaha.jpg", alt: "Rovnováha s míčkem" },
   { src: "/images/studio-drep.png", alt: "Koučink ve dřepu" },
   { src: "/images/lekce-hul.jpg", alt: "Práce s dřevěnou holí" },
-  { src: "/images/lekce-partner.jpg", alt: "Partnerské cvičení" },
   { src: "/images/lekce-flow.jpg", alt: "Pohyb ve flow" },
   { src: "/images/lekce-stena.jpg", alt: "Práce u stěny" },
   { src: "/images/lekce-zem.jpg", alt: "Pohyb na zemi" },
